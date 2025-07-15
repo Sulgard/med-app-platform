@@ -3,6 +3,7 @@ package com.example.med_app.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.SourceType;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.Instant;
@@ -10,7 +11,7 @@ import java.time.Instant;
 @Data
 @Entity
 @Table(name = "users", schema = "medical_app")
-public class User {
+public class User extends BaseEntityAudit{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -21,10 +22,10 @@ public class User {
     private String password;
     private String phoneNumber;
 
-    @CreationTimestamp
-    private Instant createdAt;
+    @CreationTimestamp(source = SourceType.DB)
+    private Instant createdOn;
 
-    @UpdateTimestamp
-    private Instant updatedAt;
+    @UpdateTimestamp(source = SourceType.DB)
+    private Instant updatedOn;
 
 }
