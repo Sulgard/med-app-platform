@@ -1,31 +1,24 @@
 package com.example.med_app.entity;
 
+import com.example.med_app.enums.Gender;
 import jakarta.persistence.*;
 import lombok.Data;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.SourceType;
-import org.hibernate.annotations.UpdateTimestamp;
-
+import jakarta.validation.constraints.Pattern;
 import java.time.Instant;
 
 @Data
 @Entity
 @Table(name = "users", schema = "medical_app")
 public class User extends BaseEntityAudit{
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
 
     private String email;
     private String firstName;
     private String lastName;
+//    @Pattern(
+//            regexp = "^\\+[1-9]\\d{1,14}$",
+//            message = "The telephone number must match with the standard E.164 (e.g. +48123456789)"
+//    ) FOR THE FUTURE
     private String password;
     private String phoneNumber;
-
-    @CreationTimestamp(source = SourceType.DB)
-    private Instant createdOn;
-
-    @UpdateTimestamp(source = SourceType.DB)
-    private Instant updatedOn;
-
+    private Gender gender;
 }
