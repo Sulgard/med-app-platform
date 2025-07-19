@@ -3,13 +3,18 @@ package com.example.med_app.entity;
 import com.example.med_app.enums.Gender;
 import jakarta.persistence.*;
 import lombok.Data;
-import jakarta.validation.constraints.Pattern;
-import java.time.Instant;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import java.time.LocalDate;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
 @Entity
 @Table(name = "users", schema = "medical_app")
-public class User extends BaseEntityAudit{
+public class User extends BaseEntityAudit implements UserDetails {
 
     private String email;
     private String firstName;
@@ -21,4 +26,31 @@ public class User extends BaseEntityAudit{
     private String password;
     private String phoneNumber;
     private Gender gender;
+    private LocalDate dateOfBirth;
+    private String medicalLicense;
+    private String specialty;
+    private String insurance;
+    private boolean isEnabled;
+    private boolean isDeleted;
+
+    @ManyToOne
+    @JoinColumn(name = "role_id", nullable = false)
+    private Role role;
+
+    @Override
+    public String getUsername() {
+        return email;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        Set<GrantedAuthority> authorities = new HashSet<>();
+
+        if (role != null) {
+            authorities.add(role);
+            authorities.addAll(role.getPrivileges());
+        }
+        return authorities;
+    }
+
 }
