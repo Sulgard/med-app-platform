@@ -6,6 +6,7 @@ import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.time.Instant;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.HashSet;
@@ -30,8 +31,8 @@ public class User extends BaseEntityAudit implements UserDetails {
     private String medicalLicense;
     private String specialty;
     private String insurance;
-    private boolean isEnabled;
     private boolean isDeleted;
+    private Instant lastLogin;
 
     @ManyToOne
     @JoinColumn(name = "role_id", nullable = false)

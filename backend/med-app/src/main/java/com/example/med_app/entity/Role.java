@@ -5,7 +5,7 @@ import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 
 import java.util.Set;
-import java.util.UUID;
+
 
 @Data
 @Entity

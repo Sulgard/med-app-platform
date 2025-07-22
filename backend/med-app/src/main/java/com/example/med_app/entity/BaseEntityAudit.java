@@ -16,8 +16,6 @@ import java.util.Objects;
 @Setter
 @MappedSuperclass
 public class BaseEntityAudit extends BaseEntity implements Serializable {
-    private String createdBy;
-    private String updatedBy;
 
     @CreationTimestamp(source = SourceType.DB)
     @Column(name = "created_on", updatable = false)
@@ -33,23 +31,19 @@ public class BaseEntityAudit extends BaseEntity implements Serializable {
         if (!(o instanceof BaseEntityAudit)) return false;
         if (!super.equals(o)) return false;
         BaseEntityAudit that = (BaseEntityAudit) o;
-        return createdBy.equals(that.createdBy) &&
-                updatedBy.equals(that.updatedBy) &&
-                createdOn.equals(that.createdOn) &&
+        return  createdOn.equals(that.createdOn) &&
                 updatedOn.equals(that.updatedOn);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(super.hashCode(),
-                createdBy, updatedBy, createdOn, updatedOn);
+                createdOn, updatedOn);
     }
 
     @Override
     public String toString() {
         return "BaseEntityAudit{" +
-                "createdBy='" + createdBy + '\'' +
-                ", updatedBy='" + updatedBy + '\'' +
                 ", createdOn=" + createdOn +
                 ", updatedOn=" + updatedOn +
                 "}" +
