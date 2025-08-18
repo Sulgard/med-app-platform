@@ -9,7 +9,7 @@ import java.util.Set;
 
 @Data
 @Entity
-@Table(name = "roles")
+@Table(name = "roles", schema = "dental_clinic")
 public class Role extends BaseEntityAudit implements GrantedAuthority {
     private String name;
 

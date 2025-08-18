@@ -10,11 +10,12 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Data
 @Entity
-@Table(name = "users", schema = "medical_app")
+@Table(name = "users", schema = "dental_clinic")
 public class User extends BaseEntityAudit implements UserDetails {
 
     private String email;
@@ -29,10 +30,15 @@ public class User extends BaseEntityAudit implements UserDetails {
     private Gender gender;
     private LocalDate dateOfBirth;
     private String medicalLicense;
-    private String specialty;
     private String insurance;
     private boolean isDeleted;
     private Instant lastLogin;
+    @OneToMany(mappedBy = "patient", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Appointment> appointments;
+    @OneToMany(mappedBy = "patient", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Prescription> prescriptions;
+    @OneToMany(mappedBy = "patient", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<DentalRecord> dentalRecords;
 
     @ManyToOne
     @JoinColumn(name = "role_id", nullable = false)
