@@ -5,6 +5,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import lombok.Data;
 
+import java.time.LocalDate;
+
 @Data
 @Entity
 @Table(name = "prescriptions", schema = "dental_clinic")
@@ -17,4 +19,6 @@ public class Prescription extends BaseEntity {
     private User patient;
     @Column(name = "doctor_id")
     private User doctor;
+    private LocalDate expiryDate;
+    private LocalDate assignedDate;
 }

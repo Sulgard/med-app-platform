@@ -8,10 +8,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.Instant;
 import java.time.LocalDate;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Data
 @Entity
@@ -33,12 +30,12 @@ public class User extends BaseEntityAudit implements UserDetails {
     private String insurance;
     private boolean isDeleted;
     private Instant lastLogin;
-    @OneToMany(mappedBy = "patient", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Appointment> appointments;
-    @OneToMany(mappedBy = "patient", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Prescription> prescriptions;
-    @OneToMany(mappedBy = "patient", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<DentalRecord> dentalRecords;
+    @OneToMany(mappedBy = "patient", fetch = FetchType.LAZY)
+    private List<Appointment> appointments = new ArrayList<>();
+    @OneToMany(mappedBy = "patient", fetch = FetchType.LAZY)
+    private List<Prescription> prescriptions = new ArrayList<>();
+    @OneToMany(mappedBy = "patient", fetch = FetchType.LAZY)
+    private List<DentalRecord> dentalRecords = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name = "role_id", nullable = false)
