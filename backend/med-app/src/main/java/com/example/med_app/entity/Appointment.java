@@ -19,8 +19,9 @@ public class Appointment extends BaseEntityAudit {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "doctor_id")
     private User doctor;
+    @Column(name = "appointment_date")
     private LocalDateTime appointmentDate;
-    private String appointmentType;
+    @Column(name = "status")
     private AppointmentStatusType appointmentStatus;
     private String notes;
 }

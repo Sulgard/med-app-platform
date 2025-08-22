@@ -17,6 +17,7 @@ spring:
   sql:
     init:
       mode: always
+      schema-locations: classpath:schema.sql
 
   datasource:
     url: jdbc:postgresql://localhost:5432/${POSTGRES_DB}

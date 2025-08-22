@@ -18,12 +18,10 @@ public class User extends BaseEntityAudit implements UserDetails {
     private String email;
     private String firstName;
     private String lastName;
-//    @Pattern(
-//            regexp = "^\\+[1-9]\\d{1,14}$",
-//            message = "The telephone number must match with the standard E.164 (e.g. +48123456789)"
-//    ) FOR THE FUTURE
+
     private String password;
     private String phoneNumber;
+    @Enumerated(EnumType.STRING)
     private Gender gender;
     private LocalDate dateOfBirth;
     private String medicalLicense;

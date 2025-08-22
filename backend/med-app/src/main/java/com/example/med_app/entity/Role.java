@@ -1,6 +1,5 @@
 package com.example.med_app.entity;
 
-import com.example.med_app.enums.RoleName;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
@@ -12,7 +11,7 @@ import java.util.Set;
 @Entity
 @Table(name = "roles", schema = "dental_clinic")
 public class Role extends BaseEntityAudit implements GrantedAuthority {
-    private RoleName name;
+    private String name;
 
     @ManyToMany
     @JoinTable(
@@ -25,6 +24,6 @@ public class Role extends BaseEntityAudit implements GrantedAuthority {
 
     @Override
     public String getAuthority() {
-        return name.toString();
+        return name;
     }
 }

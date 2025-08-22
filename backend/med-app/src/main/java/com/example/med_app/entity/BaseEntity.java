@@ -19,8 +19,7 @@ import java.util.UUID;
 public abstract class BaseEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(columnDefinition = "BINARY(16)", updatable = false, nullable = false)
-    private UUID id;
+    private Long id;
 
     @Override
     public boolean equals(Object o) {

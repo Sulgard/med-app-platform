@@ -38,7 +38,7 @@ public class SecurityConfiguration {
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests((authrizeHttpRequests) ->
                         authrizeHttpRequests
-                                .requestMatchers("auth/*").permitAll()
+                                .requestMatchers("users/**").permitAll()
                                 .anyRequest().authenticated())
                 .sessionManagement((sessionManagement) ->
                         sessionManagement
