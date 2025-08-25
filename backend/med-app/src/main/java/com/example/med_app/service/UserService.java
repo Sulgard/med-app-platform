@@ -2,6 +2,7 @@ package com.example.med_app.service;
 
 import com.example.med_app.dto.request.CreateUserRequestDTO;
 import com.example.med_app.dto.response.CreateUserResponseDTO;
+import com.example.med_app.dto.response.DeleteUserResponseDTO;
 import com.example.med_app.entity.Role;
 import com.example.med_app.entity.User;
 import com.example.med_app.repository.RoleRepository;
@@ -34,5 +35,16 @@ public class UserService {
         User savedUser = userRepository.save(user);
         return new  CreateUserResponseDTO("User created successfully");
     }
+
+    public DeleteUserResponseDTO deleteUser(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("User with id " + userId + " doesn't exist"));
+
+        user.setDeleted(true);
+        userRepository.save(user);
+        return new DeleteUserResponseDTO("User deleted successfully");
+    }
+
+
 
 }

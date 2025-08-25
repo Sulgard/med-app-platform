@@ -35,6 +35,9 @@ public class User extends BaseEntityAudit implements UserDetails {
     @OneToMany(mappedBy = "patient", fetch = FetchType.LAZY)
     private List<DentalRecord> dentalRecords = new ArrayList<>();
 
+    @OneToOne(mappedBy = "user")
+    private RefreshToken refreshToken;
+
     @ManyToOne
     @JoinColumn(name = "role_id", nullable = false)
     private Role role;

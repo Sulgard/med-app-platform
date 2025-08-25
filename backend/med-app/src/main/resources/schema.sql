@@ -48,6 +48,13 @@ CREATE TABLE IF NOT EXISTS dental_clinic.users(
     updated_on TIMESTAMPTZ
 );
 
+CREATE TABLE IF NOT EXISTS dental_clinic.refresh_tokens(
+    refresh_token_id SERIAL PRIMARY KEY NOT NULL,
+    user_id BIGINT UNIQUE NOT NULL REFERENCES dental_clinic.users(user_id) ON DELETE CASCADE,
+    token TEXT NOT NULL,
+    expiry_date TIMESTAMP NOT NULL
+);
+
 CREATE TABLE IF NOT EXISTS dental_clinic.appointments(
     appointment_id SERIAL PRIMARY KEY NOT NULL,
     patient_id INTEGER NOT NULL REFERENCES dental_clinic.users(user_id) ON DELETE CASCADE,

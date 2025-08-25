@@ -28,32 +28,32 @@ public class JwtService {
         this.userRepository = userRepository;
     }
 
-
     @Value("${SECRET_KEY")
     private String secretKey;
+    private final long ACCESS_TOKEN_EXPIRY = 900000; //15min
 
 
     private String createToken(
             Map<String, Object> extraClaims,
-            String email
+            String email,
+            long expiry
     ) {
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new IllegalArgumentException("User not found"));
-        extraClaims.put("role", user.getRole().getName());
-        extraClaims.put("userId", user.getId());
         return Jwts.builder()
                 .subject(email)
                 .claims(extraClaims)
                 .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(new Date(System.currentTimeMillis() + 15 * 60 * 1000))
-                .signWith(key())
+                .expiration(new Date(System.currentTimeMillis() + expiry))
+                .signWith(key(),  SignatureAlgorithm.HS256)
                 .compact();
     }
 
 
-    public String generateToken(String email) {
-        Map<String, Object> extraClaims = new HashMap<>();
-        return createToken(extraClaims, email);
+    public String generateAccessToken(UserDetails userDetails) {
+        return createToken(new HashMap<>(), userDetails.getUsername(), ACCESS_TOKEN_EXPIRY);
+    }
+
+    public String generateRefreshToken(UserDetails userDetails, long REFRESH_TOKEN_EXPIRY) {
+        return createToken(new HashMap<>(), userDetails.getUsername(), REFRESH_TOKEN_EXPIRY);
     }
 
 

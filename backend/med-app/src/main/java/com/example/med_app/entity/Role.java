@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 
+import java.util.HashSet;
 import java.util.Set;
 
 
@@ -20,7 +21,7 @@ public class Role extends BaseEntityAudit implements GrantedAuthority {
                     name = "role_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(
                     name = "privilege_id", referencedColumnName = "id"))
-    private Set<Privilege> privileges;
+    private Set<Privilege> privileges = new HashSet<>();
 
     @Override
     public String getAuthority() {

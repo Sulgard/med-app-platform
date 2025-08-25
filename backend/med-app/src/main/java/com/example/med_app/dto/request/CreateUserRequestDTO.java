@@ -6,6 +6,7 @@ import jakarta.validation.constraints.Pattern;
 
 import java.time.LocalDate;
 
+
 public record CreateUserRequestDTO(
         @NotBlank String email,
         @NotBlank String firstName,
