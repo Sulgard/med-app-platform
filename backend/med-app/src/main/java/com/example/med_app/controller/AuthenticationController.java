@@ -2,11 +2,8 @@ package com.example.med_app.controller;
 
 import com.example.med_app.dto.request.AuthRequestDTO;
 import com.example.med_app.dto.request.CreateUserRequestDTO;
-import com.example.med_app.dto.request.RefreshTokenDTO;
 import com.example.med_app.dto.request.RefreshTokenRequestDTO;
 import com.example.med_app.dto.response.JWTresponseDTO;
-import com.example.med_app.dto.response.JwtResponseDTO;
-import com.example.med_app.dto.response.UserIdDTO;
 import com.example.med_app.dto.response.UserIdResponseDTO;
 import com.example.med_app.entity.RefreshToken;
 import com.example.med_app.exceptions.InvalidTokenException;

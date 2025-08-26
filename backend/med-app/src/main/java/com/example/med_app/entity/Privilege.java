@@ -2,16 +2,16 @@ package com.example.med_app.entity;
 
 import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
-
-import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
-@Table(name = "privileges")
+@Table(name = "privileges", schema = "dental_clinic")
 public class Privilege extends BaseEntityAudit implements GrantedAuthority {
     String name;
 
-    @ManyToMany
-    private Collection<Role> roles;
+    @ManyToMany(mappedBy = "privileges", fetch = FetchType.LAZY)
+    private Set<Role> roles = new HashSet<>();
 
     @Override
     public String getAuthority() {

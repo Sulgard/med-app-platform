@@ -3,26 +3,29 @@ spring:
     active: dev
   application:
     name: med-app
+  security:
+    secret-key: NTUyODc4MDA0Mzc2MTE0NzQwMzE1NjczNjcyMzgxMTcwMDIyNDExNjc2NzY0NDg0MTI4MTU1Mzc2NzMxNDg3Nw==
+
 
   main:
     allow-bean-definition-overriding: true
 
   jpa:
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: validate
     show-sql: true
     database: postgresql
     database-platform: org.hibernate.dialect.PostgreSQLDialect
-
-  sql:
-    init:
-      mode: always
-      schema-locations: classpath:schema.sql
 
   datasource:
     url: jdbc:postgresql://localhost:5432/${POSTGRES_DB}
     username: ${POSTGRES_USER}
     password: ${POSTGRES_PASSWORD}
 
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+
 server:
   port: 8080
+

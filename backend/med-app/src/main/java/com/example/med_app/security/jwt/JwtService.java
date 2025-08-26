@@ -28,8 +28,9 @@ public class JwtService {
         this.userRepository = userRepository;
     }
 
-    @Value("${SECRET_KEY")
+    @Value("${spring.security.secret-key}")
     private String secretKey;
+
     private final long ACCESS_TOKEN_EXPIRY = 900000; //15min
 
 

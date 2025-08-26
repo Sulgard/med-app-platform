@@ -16,7 +16,7 @@ public class Role extends BaseEntityAudit implements GrantedAuthority {
 
     @ManyToMany
     @JoinTable(
-            name = "role_privileges",
+            name = "role_privileges", schema = "dental_clinic",
             joinColumns = @JoinColumn(
                     name = "role_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(

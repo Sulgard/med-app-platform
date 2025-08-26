@@ -17,6 +17,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 
@@ -29,6 +30,7 @@ public class AuthenticationService {
     private final UserDetailsService userDetailsService;
     private final JwtService jwtService;
     private final RefreshTokenService refreshTokenService;
+    private final PasswordEncoder passwordEncoder;
 
     public UserIdResponseDTO register(CreateUserRequestDTO request) {
         Role role = roleRepository.findByName("PATIENT")
@@ -37,7 +39,8 @@ public class AuthenticationService {
         User user = new User();
         user.setRole(role);
         user.setEmail(request.email());
-        user.setPassword(request.password());
+        user.setPassword(passwordEncoder.encode(request.password()));
+        user.setPhoneNumber(request.phoneNumber());
         user.setFirstName(request.firstName());
         user.setLastName(request.lastName());
         user.setDateOfBirth(request.dateOfBirth());

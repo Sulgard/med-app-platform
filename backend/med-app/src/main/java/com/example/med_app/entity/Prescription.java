@@ -1,8 +1,6 @@
 package com.example.med_app.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Data;
 
 import java.time.LocalDate;
@@ -15,9 +13,13 @@ public class Prescription extends BaseEntity {
     private String dosage;
     private String instruction;
     private String prescriptionCode;
-    @Column(name = "patient_id")
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "patient_id", nullable = false)
     private User patient;
-    @Column(name = "doctor_id")
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "doctor_id", nullable = false)
     private User doctor;
     private LocalDate expiryDate;
     private LocalDate assignedDate;

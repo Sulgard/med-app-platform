@@ -21,7 +21,7 @@ public class Appointment extends BaseEntityAudit {
     private User doctor;
     @Column(name = "appointment_date")
     private LocalDateTime appointmentDate;
-    @Column(name = "status")
+    @Column(name = "status_id")
     private AppointmentStatusType appointmentStatus;
     private String notes;
 }
