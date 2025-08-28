@@ -3,8 +3,10 @@ package com.example.med_app.service;
 import com.example.med_app.dto.request.CreateUserRequestDTO;
 import com.example.med_app.dto.response.CreateUserResponseDTO;
 import com.example.med_app.dto.response.DeleteUserResponseDTO;
+import com.example.med_app.entity.PasswordResetToken;
 import com.example.med_app.entity.Role;
 import com.example.med_app.entity.User;
+import com.example.med_app.repository.PasswordResetTokenRepository;
 import com.example.med_app.repository.RoleRepository;
 import com.example.med_app.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +18,7 @@ import org.springframework.stereotype.Service;
 public class UserService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
+    private final PasswordResetTokenRepository passwordResetTokenRepository;
 
 
     public CreateUserResponseDTO createUser(CreateUserRequestDTO request) {
@@ -43,6 +46,11 @@ public class UserService {
         user.setDeleted(true);
         userRepository.save(user);
         return new DeleteUserResponseDTO("User deleted successfully");
+    }
+
+    public User findUserByEmail(String email) {
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("User with email " + email + " doesn't exist"));
     }
 
 
