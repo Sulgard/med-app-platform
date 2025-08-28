@@ -5,6 +5,7 @@ import com.example.med_app.entity.User;
 import com.example.med_app.exceptions.TokenExpiredException;
 import com.example.med_app.exceptions.TokenNotFoundException;
 import com.example.med_app.repository.RefreshTokenRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -29,9 +30,15 @@ public class RefreshTokenService {
         return refreshTokenRepository.save(refreshToken);
     }
 
+    @Transactional
     public void deleteByToken(String refreshToken) {
         RefreshToken refreshTokenOB = refreshTokenRepository.findByToken(refreshToken)
                 .orElseThrow(() -> new TokenNotFoundException("Refresh token not found"));
+
+        User user = refreshTokenOB.getUser();
+        if (user != null) {
+            user.setRefreshToken(null);
+        }
         refreshTokenRepository.delete(refreshTokenOB);
     }
 

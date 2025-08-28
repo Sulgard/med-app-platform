@@ -52,7 +52,9 @@ CREATE TABLE IF NOT EXISTS dental_clinic.refresh_tokens(
     id BIGSERIAL PRIMARY KEY NOT NULL,
     user_id BIGINT UNIQUE NOT NULL REFERENCES dental_clinic.users(id) ON DELETE CASCADE,
     token TEXT NOT NULL,
-    expiry_date TIMESTAMP NOT NULL
+    expiry_date TIMESTAMP NOT NULL,
+    created_on TIMESTAMPTZ NOT NULL,
+    updated_on TIMESTAMPTZ
 );
 
 CREATE TABLE IF NOT EXISTS dental_clinic.appointments(

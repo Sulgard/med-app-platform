@@ -10,10 +10,7 @@ import java.time.Instant;
 @Setter
 @Entity
 @Table(name = "refresh_tokens", schema = "dental_clinic")
-public class RefreshToken {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class RefreshToken extends BaseEntityAudit {
     @Column(unique = true, nullable = false)
     private String token;
     private Instant expiryDate;

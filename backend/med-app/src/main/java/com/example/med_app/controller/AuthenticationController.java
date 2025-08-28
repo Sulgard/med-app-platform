@@ -6,6 +6,7 @@ import com.example.med_app.dto.request.RefreshTokenRequestDTO;
 import com.example.med_app.dto.response.JWTresponseDTO;
 import com.example.med_app.dto.response.UserIdResponseDTO;
 import com.example.med_app.entity.RefreshToken;
+import com.example.med_app.entity.User;
 import com.example.med_app.exceptions.InvalidTokenException;
 import com.example.med_app.security.jwt.JwtService;
 import com.example.med_app.security.jwt.RefreshTokenService;
@@ -39,17 +40,18 @@ public class AuthenticationController {
     }
 
     @PostMapping("/refresh")
-    public ResponseEntity<?> refreshToken(@RequestBody String request) {
-        return refreshTokenService.findByToken(request)
+    public ResponseEntity<?> refreshToken(@RequestBody RefreshTokenRequestDTO request) {
+        return refreshTokenService.findByToken(request.refreshToken())
                 .map(refreshTokenService::verifyExpiration)
                 .map(token -> {
+                    User userRef = token.getUser();
+
                     refreshTokenService.deleteByToken(token.getToken());
 
                     RefreshToken newRefreshToken = refreshTokenService
-                            .createRefreshToken(token.getUser());
+                            .createRefreshToken(userRef);
 
-                    String accessToken = jwtService.generateAccessToken(
-                            token.getUser());
+                    String accessToken = jwtService.generateAccessToken(userRef);
 
                     return ResponseEntity.ok(new JWTresponseDTO(
                             accessToken,
