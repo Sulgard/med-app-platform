@@ -3,7 +3,8 @@ package com.example.med_app.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.util.Date;
+import java.time.Instant;
+
 
 @Data
 @Entity
@@ -14,5 +15,6 @@ public class PasswordResetToken extends BaseEntityAudit {
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(nullable = false, name = "user_id")
     private User user;
-    private Date expiryDate;
+    @Column(name = "expiry_date")
+    private Instant expiryDate;
 }

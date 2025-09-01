@@ -1,8 +1,10 @@
 package com.example.med_app.controller;
 
 import com.example.med_app.dto.request.CreateUserRequestDTO;
+import com.example.med_app.dto.request.PasswordResetRequestDTO;
 import com.example.med_app.dto.response.CreateUserResponseDTO;
 import com.example.med_app.dto.response.DeleteUserResponseDTO;
+import com.example.med_app.dto.response.GenericResponse;
 import com.example.med_app.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -25,5 +27,11 @@ public class UserController {
     public ResponseEntity<DeleteUserResponseDTO> deleteUser(@PathVariable Long id) {
         DeleteUserResponseDTO response = userService.deleteUser(id);
         return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/save-password")
+    public ResponseEntity<GenericResponse> savePassword(PasswordResetRequestDTO request) {
+        userService.resetPassword(request.token(), request.newPassword());
+        return ResponseEntity.ok(new GenericResponse("Password reset successful"));
     }
 }

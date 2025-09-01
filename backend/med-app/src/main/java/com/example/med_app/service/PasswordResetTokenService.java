@@ -2,21 +2,20 @@ package com.example.med_app.service;
 
 import com.example.med_app.entity.PasswordResetToken;
 import com.example.med_app.entity.User;
+import com.example.med_app.exceptions.TokenExpiredException;
+import com.example.med_app.exceptions.TokenNotFoundException;
 import com.example.med_app.repository.PasswordResetTokenRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.MessageSource;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.Locale;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
 public class PasswordResetTokenService {
     private final PasswordResetTokenRepository passwordResetTokenRepository;
-    private final UserService userService;
-    private final MessageSource messages;
     private static final int EXPIRATION = 60 * 24;
 
 
@@ -24,29 +23,23 @@ public class PasswordResetTokenService {
         PasswordResetToken resetToken = new PasswordResetToken();
         resetToken.setToken(token);
         resetToken.setUser(user);
-        resetToken.setExpiryDate(new Date(System.currentTimeMillis() + EXPIRATION * 60 * 1000L));
+        resetToken.setExpiryDate(Instant.now().plus(EXPIRATION, ChronoUnit.MINUTES));
         passwordResetTokenRepository.save(resetToken);
     }
 
-    private SimpleMailMessage constructEmail(String subject,
-                                             String body,
-                                             User user) {
-        SimpleMailMessage email = new SimpleMailMessage();
-        email.setSubject(subject);
-        email.setText(body);
-        email.setTo(user.getEmail());
-        //env.getProperty("support.email")
-        email.setFrom(email.getFrom());
-        return email;
+    public PasswordResetToken findByToken(String token) {
+        return passwordResetTokenRepository.findByToken(token)
+                .orElseThrow(() -> new TokenNotFoundException("Token not found"));
     }
 
-    private SimpleMailMessage constructResetTokenEmail(
-        String contextPath,
-        Locale locale,
-        String token,
-        User user) {
-        String url = contextPath + "/user/changePassword?token=" + token;
-        String message = messages.getMessage("message.resetPassword", null, locale);
-        return constructEmail("Reset Password", message + " \r \n" + url, user);
+    public PasswordResetToken validatePasswordResetToken(String token) {
+        PasswordResetToken passwordToken = passwordResetTokenRepository.findByToken(token)
+                .orElseThrow(() -> new TokenNotFoundException("Token not found"));
+
+        if(passwordToken.getExpiryDate().isBefore(Instant.now())) {
+            throw new TokenExpiredException("Token has expired");
+        }
+
+        return passwordToken;
     }
 }

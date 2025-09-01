@@ -63,6 +63,4 @@ public class AuthenticationService {
 
         return new JWTresponseDTO(accessToken, refreshToken.getToken());
     }
-
-    //TODO: forgot password/reset password, change password and change email
 }

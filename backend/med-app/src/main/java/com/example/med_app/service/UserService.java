@@ -6,11 +6,13 @@ import com.example.med_app.dto.response.DeleteUserResponseDTO;
 import com.example.med_app.entity.PasswordResetToken;
 import com.example.med_app.entity.Role;
 import com.example.med_app.entity.User;
+import com.example.med_app.exceptions.TokenExpiredException;
+import com.example.med_app.exceptions.TokenNotFoundException;
 import com.example.med_app.repository.PasswordResetTokenRepository;
 import com.example.med_app.repository.RoleRepository;
 import com.example.med_app.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
@@ -19,6 +21,8 @@ public class UserService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final PasswordResetTokenRepository passwordResetTokenRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final PasswordResetTokenService passwordResetTokenService;
 
 
     public CreateUserResponseDTO createUser(CreateUserRequestDTO request) {
@@ -53,6 +57,20 @@ public class UserService {
                 .orElseThrow(() -> new IllegalArgumentException("User with email " + email + " doesn't exist"));
     }
 
+    public User getUserByPasswordResetToken(PasswordResetToken token) {
+        return userRepository.findByPasswordResetToken(token)
+                .orElseThrow(() -> new TokenNotFoundException("User with token " + token.getToken() + " doesn't exist"));
+    }
 
+    public void changeUserPassword(User user, String password) {
+        user.setPassword(passwordEncoder.encode(password));
+        userRepository.save(user);
+    }
 
+    public void resetPassword(String token, String newPassword) {
+        PasswordResetToken passwordResetToken = passwordResetTokenService.validatePasswordResetToken(token);
+        User user = passwordResetToken.getUser();
+        changeUserPassword(user, newPassword);
+        passwordResetTokenRepository.delete(passwordResetToken);
+    }
 }
