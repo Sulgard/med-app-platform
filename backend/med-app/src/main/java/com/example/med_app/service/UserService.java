@@ -1,19 +1,23 @@
 package com.example.med_app.service;
 
+import com.example.med_app.dto.request.ChangeEmailRequestDTO;
+import com.example.med_app.dto.request.ChangePasswordRequestDTO;
 import com.example.med_app.dto.request.CreateUserRequestDTO;
 import com.example.med_app.dto.response.CreateUserResponseDTO;
 import com.example.med_app.dto.response.DeleteUserResponseDTO;
 import com.example.med_app.entity.PasswordResetToken;
 import com.example.med_app.entity.Role;
 import com.example.med_app.entity.User;
-import com.example.med_app.exceptions.TokenExpiredException;
 import com.example.med_app.exceptions.TokenNotFoundException;
 import com.example.med_app.repository.PasswordResetTokenRepository;
 import com.example.med_app.repository.RoleRepository;
 import com.example.med_app.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -39,7 +43,7 @@ public class UserService {
         user.setMedicalLicense(request.medicalLicense());
         user.setDateOfBirth(request.dateOfBirth());
         user.setInsurance(request.insurance());
-        User savedUser = userRepository.save(user);
+        userRepository.save(user);
         return new  CreateUserResponseDTO("User created successfully");
     }
 
@@ -62,15 +66,64 @@ public class UserService {
                 .orElseThrow(() -> new TokenNotFoundException("User with token " + token.getToken() + " doesn't exist"));
     }
 
-    public void changeUserPassword(User user, String password) {
+    public void saveNewPassword(User user, String password) {
         user.setPassword(passwordEncoder.encode(password));
         userRepository.save(user);
+    }
+
+    public void changeUserEmail(User user, ChangeEmailRequestDTO request) {
+        if (request.password() == null || request.password().isBlank() && request.repeatPassword() == null || request.repeatPassword().isBlank()) {
+            throw new IllegalArgumentException("Password is empty");
+        }
+        if (! passwordEncoder.matches(request.password(), user.getPassword())) {
+            throw new IllegalArgumentException("Passwords doesn't match");
+        }
+        if (!request.password().equals(request.repeatPassword())) {
+            throw new IllegalArgumentException("Passwords doesn't match");
+        }
+        if (userRepository.findByEmail(request.email()).isPresent()) {
+            throw new IllegalArgumentException("Email is in use");
+        }
+
+        user.setEmail(request.email());
+        userRepository.save(user);
+    }
+
+    public void changeUserPassword(User user, ChangePasswordRequestDTO request) {
+        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        String oldPassword = request.oldPassword();
+        String newPassword = request.newPassword();
+        String newPassword2 = request.repeatNewPassword();
+
+        String userPassword = user.getPassword();
+
+        if (!passwordEncoder.matches(oldPassword, userPassword)) {
+            throw new IllegalArgumentException("Old password doesn't match");
+        }
+
+        if (newPassword == null || newPassword.isBlank()) {
+            throw new IllegalArgumentException("Password is empty");
+        }
+
+        if (newPassword2 == null || newPassword2.isBlank()) {
+            throw new IllegalArgumentException("Password is empty");
+        }
+
+        if(newPassword.equals(oldPassword)) {
+            throw new IllegalArgumentException("New password matches old password");
+        }
+
+        if(!newPassword.equals(newPassword2)) {
+            throw new IllegalArgumentException("Passwords don't match");
+        }
+
+        saveNewPassword(user, newPassword);
     }
 
     public void resetPassword(String token, String newPassword) {
         PasswordResetToken passwordResetToken = passwordResetTokenService.validatePasswordResetToken(token);
         User user = passwordResetToken.getUser();
-        changeUserPassword(user, newPassword);
+        saveNewPassword(user, newPassword);
         passwordResetTokenRepository.delete(passwordResetToken);
     }
 }
