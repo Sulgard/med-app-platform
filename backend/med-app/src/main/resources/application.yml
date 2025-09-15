@@ -40,6 +40,13 @@ spring:
     host: localhost
     port: 1025
 
+  data:
+    redis:
+      database: 4
+      host: localhost
+      password: "Testowehaslodlaredisa"
+      port: 6379
+
 server:
   port: 8080
 

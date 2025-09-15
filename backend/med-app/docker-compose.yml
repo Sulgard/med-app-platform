@@ -19,8 +19,23 @@ services:
       - "1080:1080"
       - "1025:1025"
 
+  redis:
+    image: redis:latest
+    container_name: dental_redis
+    restart: always
+    ports:
+      - "6379:6379"
+    command: redis-server --save 20 1 --loglevel warning --requirepass ${REDIS_PASSWORD}
+    volumes:
+      - cache:/data
+
 volumes:
   postgres_data:
+  cache:
+
+networks:
+  backend:
+    driver: bridge
 
 
 
