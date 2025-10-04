@@ -7,6 +7,7 @@ import com.example.med_app.dto.request.PasswordResetRequestDTO;
 import com.example.med_app.dto.response.CreateUserResponseDTO;
 import com.example.med_app.dto.response.DeleteUserResponseDTO;
 import com.example.med_app.dto.response.GenericResponse;
+import com.example.med_app.dto.response.UserResponseDTO;
 import com.example.med_app.entity.User;
 import com.example.med_app.service.UserService;
 import jakarta.validation.Valid;
@@ -49,5 +50,11 @@ public class UserController {
     public ResponseEntity<GenericResponse> changeUserEmail(ChangeEmailRequestDTO request, @AuthenticationPrincipal User user) {
         userService.changeUserEmail(user, request);
         return ResponseEntity.ok(new GenericResponse("Email changed successfully"));
+    }
+
+    @GetMapping("user/{id}/details")
+    public ResponseEntity<UserResponseDTO> getUserProfile(@PathVariable Long id) {
+        UserResponseDTO response = userService.getUserDetails(id);
+        return ResponseEntity.ok(response);
     }
 }

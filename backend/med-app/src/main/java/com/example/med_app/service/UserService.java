@@ -5,6 +5,7 @@ import com.example.med_app.dto.request.ChangePasswordRequestDTO;
 import com.example.med_app.dto.request.CreateUserRequestDTO;
 import com.example.med_app.dto.response.CreateUserResponseDTO;
 import com.example.med_app.dto.response.DeleteUserResponseDTO;
+import com.example.med_app.dto.response.UserResponseDTO;
 import com.example.med_app.entity.PasswordResetToken;
 import com.example.med_app.entity.Role;
 import com.example.med_app.entity.User;
@@ -13,6 +14,7 @@ import com.example.med_app.repository.PasswordResetTokenRepository;
 import com.example.med_app.repository.RoleRepository;
 import com.example.med_app.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -124,5 +126,22 @@ public class UserService {
         User user = passwordResetToken.getUser();
         saveNewPassword(user, newPassword);
         passwordResetTokenRepository.delete(passwordResetToken);
+    }
+
+    @Cacheable(value = "USER_CACHE", key = "#userId")
+    public UserResponseDTO getUserDetails(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("User with id " + userId + " doesn't exist"));
+
+        return new UserResponseDTO(
+                user.getId(),
+                user.getFirstName(),
+                user.getLastName(),
+                user.getGender().toString(),
+                user.getDateOfBirth().toString(),
+                user.getInsurance(),
+                user.getPhoneNumber(),
+                user.getEmail()
+        );
     }
 }
