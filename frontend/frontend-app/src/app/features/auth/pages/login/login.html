@@ -1,1 +1,19 @@
-<p>login works!</p>
+<main class="login-page">
+    <h1>Login</h1>
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+        <label>
+            Email
+            <input formControlName="email" type="email" />
+        </label>
+
+        <label>
+            Password
+            <input formControlName="password" type="password" />
+        </label>
+
+        <button type="submit" [disabled]="loading || loginForm.invalid">Login</button>
+        <div class="server-error" if="serverError">{{serverError}}</div>
+
+        <p>Don't have account? <a routerLink="/register">Register</a></p>
+    </form>
+</main>
